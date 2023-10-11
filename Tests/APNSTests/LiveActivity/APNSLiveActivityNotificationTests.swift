@@ -27,7 +27,8 @@ final class APNSLiveActivityNotificationTests: XCTestCase {
             expiration: .immediately,
             priority: .immediately,
             appID: "test.app.id",
-            contentState: State(),
+						contentState: State(), 
+						alert: .init(title: .raw("Title"), subtitle: nil, body: .raw("Body"), launchImage: nil),
             event: .update,
             timestamp: 1672680658)
         
@@ -35,7 +36,7 @@ final class APNSLiveActivityNotificationTests: XCTestCase {
         let data = try encoder.encode(notification)
 
         let expectedJSONString = """
-        {"aps":{"event":"update","content-state":{"string":"Test","number":123},"timestamp":1672680658}}
+        {"aps":{"event":"update","content-state":{"string":"Test","number":123},"timestamp":1672680658,"alert":{"title":"Title","body":"Body"}}}
         """
 
         let jsonObject1 = try JSONSerialization.jsonObject(with: data) as! NSDictionary
@@ -47,8 +48,9 @@ final class APNSLiveActivityNotificationTests: XCTestCase {
         let notification = APNSLiveActivityNotification(
             expiration: .immediately,
             priority: .immediately,
-            appID: "test.app.id",
-            contentState: State(),
+						appID: "test.app.id",
+						contentState: State(), 
+						alert: nil,
             event: .end,
             timestamp: 1672680658)
         
@@ -70,6 +72,7 @@ final class APNSLiveActivityNotificationTests: XCTestCase {
             priority: .immediately,
             appID: "test.app.id",
             contentState: State(),
+						alert: nil,
             event: .end,
             timestamp: 1672680658,
             dismissalDate: .timeIntervalSince1970InSeconds(1672680800))

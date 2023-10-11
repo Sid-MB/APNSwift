@@ -66,6 +66,15 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
             self.aps.dismissalDate = newValue?.dismissal
         }
     }
+	
+	public var alert: APNSAlertNotificationContent? {
+		get {
+			return self.aps.alert
+		}
+		set {
+			self.aps.alert = newValue
+		}
+	}
     
     /// A canonical UUID that identifies the notification. If there is an error sending the notification,
     /// APNs uses this value to identify the notification to your server. The canonical form is 32 lowercase hexadecimal digits,
@@ -99,6 +108,7 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
     ///   - appID: Your app’s bundle ID/app ID. This will be suffixed with `.push-type.liveactivity`.
     ///   - apnsID: A canonical UUID that identifies the notification.
     ///   - contentState: Updated content-state of live activity
+		///   - alert: The alert to display along with the live activity update (makes it more prominent)
     ///   - event: event type e.g. update
     ///   - timestamp: Timestamp when sending notification
     ///   - dismissalDate: Timestamp when to dismiss live notification when sent with `end`, if in the past
@@ -108,6 +118,7 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
         priority: APNSPriority,
         appID: String,
         contentState: ContentState,
+				alert: APNSAlertNotificationContent?,
         event: APNSLiveActivityNotificationEvent,
         timestamp: Int,
         dismissalDate: APNSLiveActivityDismissalDate = .none,
@@ -118,6 +129,7 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
             priority: priority,
             topic: appID + ".push-type.liveactivity",
             contentState: contentState,
+						alert: alert,
             event: event,
             timestamp: timestamp,
             dismissalDate: dismissalDate
@@ -136,6 +148,7 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
     ///   - topic: The topic for the notification. In general, the topic is your app’s bundle ID/app ID suffixed with `.push-type.liveactivity`.
     ///   - apnsID: A canonical UUID that identifies the notification.
     ///   - contentState: Updated content-state of live activity
+		///   - alert: The alert to display along with the live activity update (makes it more prominent)
     ///   - event: event type e.g. update
     ///   - timestamp: Timestamp when sending notification
     ///   - dismissalDate: Timestamp when to dismiss live notification when sent with `end`, if in the past
@@ -146,6 +159,7 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
         topic: String,
         apnsID: UUID? = nil,
         contentState: ContentState,
+				alert: APNSAlertNotificationContent?,
         event: APNSLiveActivityNotificationEvent,
         timestamp: Int,
         dismissalDate: APNSLiveActivityDismissalDate = .none
@@ -154,7 +168,8 @@ public struct APNSLiveActivityNotification<ContentState: Encodable>: APNSMessage
             timestamp: timestamp,
             event: event.rawValue,
             contentState: contentState,
-            dismissalDate: dismissalDate.dismissal
+            dismissalDate: dismissalDate.dismissal,
+						alert: alert
         )
         self.apnsID = apnsID
         self.expiration = expiration
